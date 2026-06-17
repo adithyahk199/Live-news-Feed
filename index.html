@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+ 
+    <header>
+
+    <div class="header-top">
+
+        <div class="logo">
+            DAILY NEWS HUB
+        </div>
+
+        <div class="controls">
+
+            <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search News..."
+            >
+
+            <button id="searchBtn">
+                Search
+            </button>
+
+            <select id="category">
+                <option value="general">General</option>
+                <option value="world">World</option>
+                <option value="nation">Nation</option>
+                <option value="business">Business</option>
+                <option value="technology">Technology</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="sports">Sports</option>
+                <option value="science">Science</option>
+                <option value="health">Health</option>
+            </select>
+
+        </div>
+
+    </div>
+
+</header>
+
+<section class="hero">
+
+    <h1>Latest Headlines From Around The World</h1>
+
+    <p>
+        Stay informed with real-time news updates powered by GNews API.
+        Explore breaking stories across technology, business, sports,
+        entertainment, science and more.
+    </p>
+
+</section>
+
+<div id="loader" class="loader"></div>
+
+<div id="error"></div>
+
+<div id="newsContainer"></div>
+
+<footer>
+    © 2026 Daily News Hub | Powered by GNews API
+</footer>
+   <script src="index.js"></script>
+</body>
+</html>
