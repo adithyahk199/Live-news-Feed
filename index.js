@@ -1,4 +1,4 @@
-const API_KEY = "c0a60f88111d3c180a38dcb5f873168c";
+const API_KEY = "7e59cded1fb6af1d3d0f8a46ac391a1a";
 
     const loader = document.getElementById("loader");
     const newsContainer = document.getElementById("newsContainer");
@@ -163,4 +163,4 @@ const API_KEY = "c0a60f88111d3c180a38dcb5f873168c";
     window.onload = ()=>{
 
         fetchTopNews();
-    };
+    }
