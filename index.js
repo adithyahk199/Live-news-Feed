@@ -1,166 +1,144 @@
 const API_KEY = "7e59cded1fb6af1d3d0f8a46ac391a1a";
 
-    const loader = document.getElementById("loader");
-    const newsContainer = document.getElementById("newsContainer");
-    const errorDiv = document.getElementById("error");
 
-    const searchBtn = document.getElementById("searchBtn");
-    const searchInput = document.getElementById("searchInput");
-    const categorySelect = document.getElementById("category");
+    const loader = document.getElementById('loader');
+    const newsContainer = document.getElementById('newsContainer');
+    const errorDiv = document.getElementById('error');
 
-    function showLoader(){
-        loader.style.display = "block";
+    const searchBtn = document.getElementById('searchBtn');
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('category');
+
+    function showLoader() {
+        loader.style.display = 'block';
     }
 
-    function hideLoader(){
-        loader.style.display = "none";
+    function hideLoader() {
+        loader.style.display = 'none';
     }
 
-    async function fetchTopNews(category="general"){
+    function getProxyUrl(apiUrl) {
+        return `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+    }
 
-        try{
+    async function fetchTopNews(category = 'general') {
 
+        try {
             showLoader();
-
             errorDiv.textContent = "";
             newsContainer.innerHTML = "";
+            const apiUrl = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=in&max=20&apikey=${API_KEY}`;
 
-            const url =
-                `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=in&max=20&apikey=${API_KEY}`;
-
-            const response = await fetch(url);
+            const response = await fetch(getProxyUrl(apiUrl));
             const data = await response.json();
-
-            if(!response.ok){
+            console.log("Top News Response:", data);
+            if (!response.ok) {
                 throw new Error(
                     data.errors?.join(", ") ||
                     data.message ||
                     "Failed to fetch news"
                 );
             }
-
+            if (!data.articles) {
+                throw new Error("No articles returned from API");
+            }
             displayNews(data.articles);
-
-        }
-        catch(error){
-
+        } catch (error) {
+            console.error(error);
             errorDiv.textContent = error.message;
-
-        }
-        finally{
-
+        } finally {
             hideLoader();
-
         }
+
     }
 
-    async function searchNews(query){
+    async function searchNews(query) {
 
-        try{
-
+        try {
             showLoader();
-
             errorDiv.textContent = "";
             newsContainer.innerHTML = "";
-
-            const url =
-                `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=en&max=20&apikey=${API_KEY}`;
-
-            const response = await fetch(url);
+            const apiUrl = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=en&max=20&apikey=${API_KEY}`;
+                const response = await fetch(getProxyUrl(apiUrl));
             const data = await response.json();
-
-            if(!response.ok){
+            console.log("Search Response:", data);
+            if (!response.ok) {
                 throw new Error(
                     data.errors?.join(", ") ||
                     data.message ||
                     "Failed to search news"
                 );
             }
-
+            if (!data.articles) {
+                throw new Error("No articles returned from API");
+            }
             displayNews(data.articles);
-
-        }
-        catch(error){
-
+        } catch (error) {
+            console.error(error);
             errorDiv.textContent = error.message;
-
-        }
-        finally{
-
+        } finally {
             hideLoader();
-
         }
+
     }
 
-    function displayNews(articles){
+    function displayNews(articles) {
 
-        if(!articles || articles.length===0){
-
-            newsContainer.innerHTML =
-                `<div class="no-news">No News Found</div>`;
-
+        newsContainer.innerHTML = "";
+        if (!articles || articles.length === 0) {
+            newsContainer.innerHTML = `<div class="no-news">No News Found</div>`;
             return;
         }
-
-        articles.forEach(article=>{
-
+        articles.forEach(article => {
             const card = document.createElement("div");
-
             card.className = "card";
-
             card.innerHTML = `
-
         <img
         src="${article.image || 'https://via.placeholder.com/400x220'}"
         alt="News Image">
-
         <div class="card-content">
-
             <small>
             ${article.source?.name || "Unknown Source"}
             •
-            ${new Date(article.publishedAt).toLocaleDateString()}
+            ${article.publishedAt
+                ? new Date(article.publishedAt).toLocaleDateString()
+                : "Unknown Date"}
             </small>
-
             <h3>${article.title || "No Title"}</h3>
-
             <p>
             ${article.description || "No Description Available"}
             </p>
-
-            <a href="${article.url}" target="_blank">
-            Read Full Article
+            <a href="${article.url || '#'}" target="_blank">
+                Read Full Article
             </a>
-
         </div>
-        `;
-
+    `;
             newsContainer.appendChild(card);
         });
+
     }
 
-    searchBtn.addEventListener("click",()=>{
+    searchBtn.addEventListener('click', () => {
 
         const query = searchInput.value.trim();
-
-        if(query){
+        if (query) {
             searchNews(query);
         }
+
     });
 
-    searchInput.addEventListener("keypress",(e)=>{
+    searchInput.addEventListener('keypress', (e) => {
 
-        if(e.key==="Enter"){
+        if (e.key === "Enter") {
             searchBtn.click();
         }
+
     });
 
-    categorySelect.addEventListener("change",()=>{
-
+    categorySelect.addEventListener("change", () => {
         fetchTopNews(categorySelect.value);
     });
 
-    window.onload = ()=>{
-
+    window.onload = () => {
         fetchTopNews();
     }
