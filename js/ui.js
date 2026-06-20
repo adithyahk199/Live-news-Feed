@@ -2,9 +2,8 @@ export function displayNews(newsContainer, articles) {
 
     newsContainer.innerHTML = "";
 
-    if (!articles.length) {
-        newsContainer.innerHTML =
-            `<div class="no-news">No News Found</div>`;
+    if (!articles || articles.length === 0) {
+        newsContainer.innerHTML = `<div class="no-news">No News Found</div>`;
         return;
     }
 
@@ -22,12 +21,14 @@ export function displayNews(newsContainer, articles) {
                 <small>
                     ${article.source?.name || "Unknown Source"}
                     •
-                    ${new Date(article.publishedAt).toLocaleDateString()}
+                    ${article.publishedAt
+                        ? new Date(article.publishedAt).toLocaleDateString()
+                        : "Unknown Date"}
                 </small>
 
                 <h3>${article.title}</h3>
 
-                <p>${article.description || ""}</p>
+                <p>${article.description || "No Description Available"}</p>
 
                 <a href="${article.url}" target="_blank">
                     Read Full Article
